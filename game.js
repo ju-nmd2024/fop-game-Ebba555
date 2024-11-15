@@ -1,19 +1,76 @@
 /*
-This is my little robot
+This is my little robot 
 */
-const speed = 5;
+let state = "start";
+let gameTimer = 0;
 //
+
+function setup() {
+  createCanvas(490, 550);
+}
+
+function startScreen() {
+  background(0, 0, 255);
+  text("Start", 200, 100);
+}
+
+function gameScreen() {
+  background(100, 190, 240);
+  //Clouds
+  fill(255);
+  noStroke();
+  ellipse(150, 100, 200, 30);
+  ellipse(100, 90, 50, 30);
+  ellipse(200, 90, 50, 30);
+  ellipse(170, 80, 50);
+  ellipse(130, 80, 50);
+  ellipse(150, 60, 30);
+
+  ellipse(370, 200, 200, 30);
+  ellipse(320, 190, 50, 30);
+  ellipse(410, 190, 50, 30);
+  ellipse(350, 180, 50);
+  ellipse(380, 180, 50);
+  ellipse(365, 160, 30);
+
+  push();
+  scale(0.5);
+  ellipse(250, 600, 200, 30);
+  ellipse(200, 590, 50, 30);
+  ellipse(300, 590, 50, 30);
+  ellipse(270, 580, 50);
+  ellipse(230, 580, 50);
+  ellipse(250, 560, 30);
+  pop();
+
+  //Grass
+  noStroke();
+  fill(0, 230, 100);
+  quad(0, 450, 491, 450, 491, 550, 0, 550);
+
+  //Landing circle
+  fill(230, 90, 180);
+  ellipse(250, 500, 130, 45);
+}
+
+function resultScreen() {
+  background(255, 255, 0);
+  text("Result", 200, 100);
+}
+
+//
+
+const speed = 5;
+
 let robotX = 100;
 let robotY = 100;
-//
+
 let x = 200;
 let y = 200;
 
-//
 // game logic variable
 let velocityY = 0.2;
-let acceleration = 0.2;
-//
+let acceleration = 0.3;
 
 function robot(x, y, flameIsOn) {
   push();
@@ -63,7 +120,7 @@ function robot(x, y, flameIsOn) {
   quad(x + 30, y + 131, x + 45, y + 150, x + 55, y + 150, x + 70, y + 131);
 
   //Flame
-  if (keyIsDown(38)) {
+  if (keyIsDown(32)) {
     //When the up key is pressed, the flame will turn on
     fill(255, 100, 0);
     ellipse(x + 50, y + 175, 30, 50);
@@ -120,60 +177,53 @@ function robot(x, y, flameIsOn) {
 function draw() {
   clear();
 
-  background(100, 190, 240);
-  //Clouds
-  fill(255);
-  noStroke();
-  ellipse(150, 100, 200, 30);
-  ellipse(100, 90, 50, 30);
-  ellipse(200, 90, 50, 30);
-  ellipse(170, 80, 50);
-  ellipse(130, 80, 50);
-  ellipse(150, 60, 30);
+  //
+  if (state === "start") {
+    startScreen();
+  } else if (state === "game") {
+    gameScreen();
+    gameTimer = gameTimer + 1;
+    if (gameTimer >= 100) {
+      gameTimer = 0;
+      state = "result";
+    }
 
-  ellipse(370, 200, 200, 30);
-  ellipse(320, 190, 50, 30);
-  ellipse(410, 190, 50, 30);
-  ellipse(350, 180, 50);
-  ellipse(380, 180, 50);
-  ellipse(365, 160, 30);
+    //Gravitation of the robot
+    robot(robotX, robotY);
 
-  push();
-  scale(0.5);
-  ellipse(250, 600, 200, 30);
-  ellipse(200, 590, 50, 30);
-  ellipse(300, 590, 50, 30);
-  ellipse(270, 580, 50);
-  ellipse(230, 580, 50);
-  ellipse(250, 560, 30);
-  pop();
+    robotY = robotY + velocityY;
+    velocityY = velocityY + acceleration;
 
-  //Grass
-  noStroke();
-  fill(0, 230, 100);
-  quad(0, 450, 491, 450, 491, 550, 0, 550);
+    if (keyIsDown(32)) {
+      velocityY = velocityY - 0.7;
+    }
 
-  //Landing circle
-  fill(230, 90, 180);
-  ellipse(250, 500, 130, 45);
+    if (keyIsDown(37)) {
+      robotX = robotX - speed;
+    } else if (keyIsDown(39)) {
+      robotX = robotX + speed;
+    }
+    if (keyIsDown(32)) {
+      robotY = robotY - speed;
+    } else if (keyIsDown(40)) {
+      robotY = robotY + speed;
+    }
 
-  robot(robotX, robotY);
-
-  robotY = robotY + velocityY;
-  velocityY = velocityY + acceleration;
-
-  if (keyIsDown(38)) {
-    velocityY = velocityY - 0.7;
+    //Stops robot when reaching the ground
+    if (robotY <= 800) {
+    } else {
+      velocityY = 0;
+    }
+  } else if (state === "result") {
+    resultScreen();
+    robotY = 100;
   }
+}
 
-  if (keyIsDown(37)) {
-    robotX = robotX - speed;
-  } else if (keyIsDown(39)) {
-    robotX = robotX + speed;
-  }
-  if (keyIsDown(38)) {
-    robotY = robotY - speed;
-  } else if (keyIsDown(40)) {
-    robotY = robotY + speed;
+function mouseClicked() {
+  if (state === "start") {
+    state = "game";
+  } else if (state === "result") {
+    state = "game";
   }
 }
