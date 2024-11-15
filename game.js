@@ -10,8 +10,15 @@ function setup() {
 }
 
 function startScreen() {
-  background(0, 0, 255);
-  text("Start", 200, 100);
+  background(0, 200, 255);
+  fill(255);
+  rect(160, 185, 200, 100, 20);
+  strokeWeight(3);
+  stroke(230, 230, 230);
+  noStroke();
+  fill(0);
+  textSize(50);
+  text("Start", 200, 250);
 }
 
 function gameScreen() {
@@ -54,7 +61,9 @@ function gameScreen() {
 }
 
 function resultScreen() {
-  background(255, 255, 0);
+  background(50, 200, 250);
+  fill(255);
+  textSize(40);
   text("Result", 200, 100);
 }
 
@@ -182,11 +191,11 @@ function draw() {
     startScreen();
   } else if (state === "game") {
     gameScreen();
-    gameTimer = gameTimer + 1;
-    if (gameTimer >= 100) {
-      gameTimer = 0;
-      state = "result";
-    }
+    // gameTimer = gameTimer + 1;
+    //if (gameTimer >= 100) {
+    //  gameTimer = 0;
+    //state = "result";
+    // }
 
     //Gravitation of the robot
     robot(robotX, robotY);
@@ -212,6 +221,7 @@ function draw() {
     //Stops robot when reaching the ground
     if (robotY <= 800) {
     } else {
+      state = "result";
       velocityY = 0;
     }
   } else if (state === "result") {
