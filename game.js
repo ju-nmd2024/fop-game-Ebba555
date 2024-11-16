@@ -3,6 +3,7 @@ This is my little robot
 */
 let state = "start";
 let gameTimer = 0;
+
 //
 
 function setup() {
@@ -67,6 +68,19 @@ function resultScreen() {
   text("Result", 200, 100);
 }
 
+function winScreen() {
+  background(0, 255, 200);
+  fill(0);
+  textsize(50);
+  text("You Win!", 200, 250);
+}
+
+function loseScreen() {
+  background(255, 50, 50);
+  fill(0);
+  textSize(50);
+  text("Game Over", 200, 250);
+}
 //
 
 const speed = 5;
