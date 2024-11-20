@@ -1,29 +1,48 @@
 /*
 This is my little robot 
 */
+
 let state = "start";
-let gameTimer = 0;
 
-//
-
+//The canvas
 function setup() {
   createCanvas(490, 550);
 }
-
+//The start screen
 function startScreen() {
-  background(0, 200, 255);
-  fill(255);
-  rect(160, 185, 200, 100, 20);
-  strokeWeight(3);
-  stroke(230, 230, 230);
+  background(100, 190, 240);
+
+  //Grass
   noStroke();
+  fill(0, 230, 100);
+  quad(0, 450, 491, 450, 491, 550, 0, 550);
+
+  //Cloud
+  fill(255);
+  noStroke();
+  ellipse(260, 200, 400, 50);
+  ellipse(170, 180, 100, 60);
+  ellipse(350, 180, 100, 60);
+  ellipse(200, 170, 80);
+  ellipse(320, 170, 80);
+  ellipse(260, 160, 100);
+
+  // The texts + a rectangle
   fill(0);
-  textSize(50);
-  text("Start", 200, 250);
+  textSize(40);
+  text("Robot landing", 140, 200);
+  textSize(20);
+  fill(255);
+  rect(90, 478, 332, 30, 20);
+  fill(0);
+  text("Press anywhere to start!", 150, 280);
+  text("Rules : Land safly on the pink cirkle", 100, 500);
 }
 
+//Game screen
 function gameScreen() {
   background(100, 190, 240);
+
   //Clouds
   fill(255);
   noStroke();
@@ -68,21 +87,39 @@ function resultScreen() {
   text("Result", 200, 100);
 }
 
+// The win screen
 function winScreen() {
-  background(0, 255, 200);
+  background(100, 190, 240);
+
+  //Grass
+  noStroke();
+  fill(0, 230, 100);
+  quad(0, 450, 491, 450, 491, 550, 0, 550);
+
+  fill(255);
+  rect(175, 180, 250, 100, 20);
   fill(0);
-  textsize(50);
+  textSize(50);
   text("You Win!", 200, 250);
 }
 
+// The lose screen
 function loseScreen() {
-  background(255, 50, 50);
+  background(100, 190, 240);
+
+  noStroke();
+  fill(0, 230, 100);
+  quad(0, 450, 491, 450, 491, 550, 0, 550);
+  fill(255, 50, 50);
+  rect(120, 180, 280, 100, 20);
   fill(0);
   textSize(50);
-  text("Game Over", 200, 250);
+  text("Game Over", 130, 250);
+  textSize(30);
+  text("Retry", 230, 330);
 }
-//
 
+//Speed for moving the robot
 const speed = 5;
 
 let robotX = 100;
@@ -93,8 +130,9 @@ let y = 200;
 
 // game logic variable
 let velocityY = 0.2;
-let acceleration = 0.3;
+let acceleration = 0.2;
 
+// The robot
 function robot(x, y, flameIsOn) {
   push();
   translate(200 - 70, 200 - 180);
@@ -200,14 +238,16 @@ function robot(x, y, flameIsOn) {
 function draw() {
   clear();
 
+  //The velocity of the falling robot
   console.log(velocityY);
+
   //
   if (state === "start") {
     startScreen();
   } else if (state === "game") {
     gameScreen();
 
-    //Gravitation of the robot
+    //Gravitation and moving of the robot
     robot(robotX, robotY);
 
     robotY = robotY + velocityY;
@@ -232,18 +272,26 @@ function draw() {
     if (robotY <= 800) {
     } else {
       state = "result";
-      velocityY = 0;
     }
-  } else if (state === "result") {
-    robotY = 100;
-    resultScreen();
+  } else if (velocityY < 10) {
+    state === "win";
+    winScreen();
+  } else if (velocityY > 10) {
+    state === "lose";
+    loseScreen();
   }
 }
-
+robotY = 100;
 function mouseClicked() {
   if (state === "start") {
     state = "game";
-  } else if (state === "result") {
+  } else if (state === "win") {
     state = "game";
-  }
+    robotX = 100;
+    robotY = 100;
+    velocityY = 0.2;
+  } else if (state === "lose") robotX = 100;
+  robotY = 100;
+  velocityY = 0.2;
+  state = "game";
 }
