@@ -272,13 +272,12 @@ function draw() {
     if (robotY <= 800) {
     } else {
       state = "result";
-      velocityY = 0;
     }
   } else if (velocityY < 10) {
-    state = "win";
+    state === "win";
     winScreen();
   } else if (velocityY > 10) {
-    state = "lose";
+    state === "lose";
     loseScreen();
   }
 }
@@ -290,7 +289,9 @@ function mouseClicked() {
     state = "game";
     robotX = 100;
     robotY = 100;
+    velocityY = 0.2;
   } else if (state === "lose") robotX = 100;
   robotY = 100;
+  velocityY = 0.2;
   state = "game";
 }
